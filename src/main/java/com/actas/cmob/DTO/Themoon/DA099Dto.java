@@ -24,6 +24,11 @@ public class DA099Dto {
     private String  IAMT;
     private String  JAMT;
     private String  IONO;
+    private String  sumqty;
+    private String  sumsamt;
+    private String  summamt;
+    private String  sumjamt;
+
 
 
 }

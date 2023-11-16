@@ -22,4 +22,8 @@ public class DA036Dto {
     private String TAX;
     private String FDATE;
     private String TDATE;
+    private String sumouamt;
+    private String suminamt;
+    private String sumhjamt;
+
 }

@@ -22,6 +22,7 @@ public class DIVICDDto {
     private String fdate;
     private String tdate;
     private String PSIZE;
+    private Long sum;
 
 
 

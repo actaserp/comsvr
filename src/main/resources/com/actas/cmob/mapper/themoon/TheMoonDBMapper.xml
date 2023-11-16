@@ -666,5 +666,10 @@
     </select>
 
 
+    <select id="userAuthcheck" parameterType="com.actas.cmob.DTO.Themoon.PopDto" resultType="com.actas.cmob.DTO.Themoon.UsersDto">
+            select sysmain from tb_xusers where userid = #{userid}
+    </select>
+
+
 
 </mapper>

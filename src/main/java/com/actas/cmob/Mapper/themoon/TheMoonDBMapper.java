@@ -151,6 +151,9 @@ public interface TheMoonDBMapper {
 
     public List<DIVICDDto> SP_PLAN_WORK_DIVI(PopDto parm);
 
+    public List<UsersDto> userAuthcheck(PopDto parm);
+
+
 
 
 

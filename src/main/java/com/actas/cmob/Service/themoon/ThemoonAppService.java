@@ -528,5 +528,16 @@ public class ThemoonAppService {
         }
     }
 
+    public List<UsersDto> userAuthcheck(PopDto parm){
+        String dbnm = parm.getDbnm();
+        switch (dbnm){
+            case "ERP_THEMOON":
+                return TheMoonDBMapper.userAuthcheck(parm);
+            default:
+                return null;
+        }
+
+    }
+
 }
 

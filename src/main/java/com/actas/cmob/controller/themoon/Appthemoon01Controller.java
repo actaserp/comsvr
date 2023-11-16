@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.swing.text.html.HTMLDocument;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -65,6 +66,9 @@ public class Appthemoon01Controller {
     List<DA036Dto> da036DtoList = new ArrayList<>();
     List<DA099Dto> da099DtoList = new ArrayList<>();
     List<CA602_01> CA602_01List = new ArrayList<>();
+
+    List<UsersDto> usersDtoList = new ArrayList<>();
+
 
 
 
@@ -796,6 +800,9 @@ public class Appthemoon01Controller {
         String extranctedValue2 = "";
         String extranctedValue3 = "";
 
+        long longvalue = 0;
+        long longvalue2 = 0;
+        long longvalue3 = 0;
 
 
         param.forEach((key, values) -> {
@@ -920,6 +927,27 @@ public class Appthemoon01Controller {
 
             da036DtoList = themoonAppService.Get_DA036_PROC(popDto);
 
+            for(int i=0; i < da036DtoList.size(); i++)
+            {
+                double doubleValue = Double.parseDouble(da036DtoList.get(i).getOUAMT());
+                longvalue += (long) doubleValue;
+
+                double doublevalue2 = Double.parseDouble(da036DtoList.get(i).getINAMT());
+                longvalue2 += (long) doublevalue2;
+
+                double doublevalue3 = Double.parseDouble(da036DtoList.get(i).getHJAMT());
+                longvalue3 += (long) doublevalue3;
+
+            }
+
+            for(int i=0; i < da036DtoList.size(); i++)
+            {
+                da036DtoList.get(i).setSumouamt(String.valueOf(longvalue));
+                da036DtoList.get(i).setSuminamt(String.valueOf(longvalue2));
+                da036DtoList.get(i).setSumhjamt(String.valueOf(longvalue3));
+
+            }
+
             //popDtoList = themoonAppService.cltnmList(popDto);
 
         }catch (DataAccessException e){
@@ -949,6 +977,12 @@ public class Appthemoon01Controller {
         String extranctedValue = "";
         String extranctedValue2 = "";
         String extranctedValue3 = "";
+
+
+        long longvalue = 0;
+        long longvalue2 = 0;
+        long longvalue3 = 0;
+        long longvalue4 = 0;
 
 
 
@@ -1015,10 +1049,38 @@ public class Appthemoon01Controller {
                 popDto.setPS_COMCD("%");
 
             }
-            log.info(popDto.getPS_CLTCD()+ " cltcd");
-            log.info(popDto.getPS_COMCD() + " drive");
+
+            if(popDto.getPS_CLTCD() == null || popDto.getPS_CLTCD() == "" || popDto.getCltnm() == "")
+            {
+                popDto.setPS_CLTCD("%");
+            }
+
 
             da099DtoList = themoonAppService.Get_DA099_PROC(popDto);
+
+            for(int i=0; i < da099DtoList.size(); i++)
+            {
+                double doubleValue = Double.parseDouble(da099DtoList.get(i).getQTY());
+                longvalue += (long) doubleValue;
+
+                double doubleValue2 = Double.parseDouble(da099DtoList.get(i).getSAMT());
+                longvalue2 += (long) doubleValue2;
+
+                double doubleValue3 = Double.parseDouble(da099DtoList.get(i).getMAMT());
+                longvalue3 += (long) doubleValue3;
+
+                double doubleValue4 = Double.parseDouble(da099DtoList.get(i).getJAMT());
+                longvalue4 += (long) doubleValue4;
+            }
+
+            for(int i=0; i < da099DtoList.size(); i++)
+            {
+                da099DtoList.get(i).setSumqty(String.valueOf(longvalue));
+                da099DtoList.get(i).setSumsamt(String.valueOf(longvalue2));
+                da099DtoList.get(i).setSummamt(String.valueOf(longvalue3));
+                da099DtoList.get(i).setSumjamt(String.valueOf(longvalue4));
+
+            }
 
         }catch (DataAccessException e){
             log.info("App01001Tab01Form DataAccessException ================================================================");
@@ -1453,7 +1515,7 @@ public class Appthemoon01Controller {
         String extranctedValue4 = "";
         String extractedText = "";
 
-
+        long longvalue = 0;
 
 
         param.forEach((key, values) -> {
@@ -1527,6 +1589,19 @@ public class Appthemoon01Controller {
 
             divicdDtoList = themoonAppService.SP_PLAN_WORK_DIVI(popDto);
 
+            log.info(divicdDtoList.size());
+            for (int i=0; i < divicdDtoList.size(); i++)
+            {
+
+                double doubleValue = Double.parseDouble(divicdDtoList.get(i).getWOQTY());
+                longvalue +=  (long) doubleValue;
+
+            }
+            for (int i=0; i < divicdDtoList.size(); i++)
+            {
+                divicdDtoList.get(i).setSum(longvalue);
+            }
+
 
         }catch (DataAccessException e){
             log.info("App01001Tab01Form DataAccessException ================================================================");
@@ -1541,5 +1616,32 @@ public class Appthemoon01Controller {
 
 
         return divicdDtoList;
+    }
+
+
+    @RequestMapping(value = "usercheck", method = RequestMethod.POST, headers = ("content-type=multipart/*"),
+    consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public Object USERSCHEKC(@RequestParam Map<String, String> param)
+    {
+        param.forEach((key, values) -> {
+            switch (key) {
+                case "dbnm":
+                    popDto.setDbnm(values);
+                    break;
+                case "userid":
+                    popDto.setUserid(values);
+                    break;
+
+            }
+
+    });
+        try{
+            usersDtoList = themoonAppService.userAuthcheck(popDto);
+
+
+        }catch (IllegalStateException e){
+            return "error";
+        }
+        return usersDtoList;
     }
 }

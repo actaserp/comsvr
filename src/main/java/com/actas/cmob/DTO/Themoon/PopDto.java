@@ -82,10 +82,13 @@ public class PopDto {
     private String ls_store;
     private String ls_pcode;
     private String PS_DIVICD;
+    private String userid;
 
 
     private String DIVICD;
     private String DIVINM;
+    private Long sum;
+
 
 
 

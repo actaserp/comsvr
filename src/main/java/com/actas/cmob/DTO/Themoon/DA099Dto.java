@@ -28,6 +28,7 @@ public class DA099Dto {
     private String  sumsamt;
     private String  summamt;
     private String  sumjamt;
+    private String  lastjamt;
 
 
 

@@ -974,15 +974,12 @@ public class Appthemoon01Controller {
     public Object MainList2(@RequestParam Map<String, String> param,
                            Model model, HttpServletRequest request) throws Exception{
 
-        String extranctedValue = "";
-        String extranctedValue2 = "";
         String extranctedValue3 = "";
 
 
         long longvalue = 0;
         long longvalue2 = 0;
         long longvalue3 = 0;
-        long longvalue4 = 0;
 
 
 
@@ -1076,18 +1073,20 @@ public class Appthemoon01Controller {
                 double doubleValue3 = Double.parseDouble(da099DtoList.get(i).getMAMT());
                 longvalue3 += (long) doubleValue3;
 
-                double doubleValue4 = Double.parseDouble(da099DtoList.get(i).getJAMT());
-                longvalue4 += (long) doubleValue4;
             }
+
+            String lastjamt = da099DtoList.get(da099DtoList.size()-1).getJAMT();
+            String result = lastjamt.replaceAll("\\.0+$", "");
 
             for(int i=0; i < da099DtoList.size(); i++)
             {
                 da099DtoList.get(i).setSumqty(String.valueOf(longvalue));
                 da099DtoList.get(i).setSumsamt(String.valueOf(longvalue2));
                 da099DtoList.get(i).setSummamt(String.valueOf(longvalue3));
-                da099DtoList.get(i).setSumjamt(String.valueOf(longvalue4));
-
+                da099DtoList.get(i).setLastjamt(String.valueOf(result));
             }
+
+
 
         }catch (DataAccessException e){
             log.info("App01001Tab01Form DataAccessException ================================================================");

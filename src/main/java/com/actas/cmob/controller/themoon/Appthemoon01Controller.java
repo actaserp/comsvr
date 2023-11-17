@@ -1032,11 +1032,11 @@ public class Appthemoon01Controller {
 
             log.info(extranctedValue3);
 
-            log.info(popDto.getCltcd());
-            log.info(popDto.getCltnm());
-            log.info(popDto.getFrdate());
-            log.info(popDto.getTodate());
-            log.info(popDto.getComcd());
+            log.info(popDto.getCltcd() + "cltcd");
+            log.info(popDto.getCltnm() + "cltnm");
+            log.info(popDto.getFrdate() + "frdate");
+            log.info(popDto.getTodate() + "todate");
+            log.info(popDto.getComcd() + "comcd");
 
 
             popDto.setPS_FDATE(popDto.getFrdate());
@@ -1055,8 +1055,15 @@ public class Appthemoon01Controller {
                 popDto.setPS_CLTCD("%");
             }
 
-
+            //여기서 갑자기 안됨
             da099DtoList = themoonAppService.Get_DA099_PROC(popDto);
+
+
+            log.info(popDto.getPS_FDATE() + "fdate1");
+            log.info(popDto.getPS_TDATE() + "tdate1");
+            log.info(popDto.getPS_CLTCD() + "cltcd1");
+            log.info(popDto.getPS_COMCD() + "comcd1");
+
 
             for(int i=0; i < da099DtoList.size(); i++)
             {

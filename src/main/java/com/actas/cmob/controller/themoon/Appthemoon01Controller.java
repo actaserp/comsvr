@@ -196,17 +196,23 @@ public class Appthemoon01Controller {
         log.info(popDto.getCode88() + " Code88");
 
         list01Dto = themoonAppService.TB_CA501list(popDto);
-        log.info(list01Dto.get(0).getPhm_pcod() + "aa");
-        popDto.setPcode(list01Dto.get(0).getPhm_pcod());
 
+        PopDto popdto1 = new PopDto();
 
+        /**20240109 수정 ***/
 
-        if(list03Dto.isEmpty()){
-            return list03Dto;
+        popdto1.setPcode(list01Dto.get(0).getPhm_pcod());
+
+        List<ThemoonListDto2> listDto2s = new ArrayList<>();
+
+        listDto2s = themoonAppService.Store_Info(popDto);
+
+        if(listDto2s.isEmpty()){
+            return list01Dto;
        }
-        if(!list03Dto.isEmpty()){
+        if(!listDto2s.isEmpty()){
 
-            list01Dto.get(0).setWfokqt_sum(list03Dto.get(0).getWfokqt_sum());
+            list01Dto.get(0).setWfokqt_sum(listDto2s.get(0).getWfokqt_sum());
             return list01Dto;
         }
         return list01Dto;

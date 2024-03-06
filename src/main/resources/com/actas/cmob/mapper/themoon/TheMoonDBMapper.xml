@@ -5,7 +5,7 @@
 <mapper namespace="com.actas.cmob.Mapper.themoon.TheMoonDBMapper">
 
     <select id="GetUserInfo" parameterType="com.actas.cmob.DTO.UserFormDto"  resultType="com.actas.cmob.DTO.UserFormDto">
-        select top 1 userid, passwd1,  custnm, pernm, useyn, perid, custcd
+        select top 1 userid, passwd1,  custnm, pernm, useyn, perid, custcd, sysmain
         from TB_XUSERS where userid=#{userid} and passwd1=#{passwd1} and useyn = '1'
     </select>
     <select id="GetTBDA035List" parameterType="com.actas.cmob.DTO.Kosep.KosepPopDto"  resultType="com.actas.cmob.DTO.Kosep.KosepList01Dto">

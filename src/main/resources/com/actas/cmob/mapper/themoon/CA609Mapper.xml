@@ -17,7 +17,7 @@
     <select id="GetQtyInfo" parameterType="com.actas.cmob.DTO.Themoon.CA609Dto" resultType="com.actas.cmob.DTO.Themoon.CA609Dto">
         SELECT ISNULL(TB_CA609.ischdate,'') as ischdate, ISNULL(TB_CA608.cltcd,'') as cltcd, ISNULL(TB_XCLIENT.cltnm,'') as cltnm, ISNULL(TB_CA609.pcode,'') as pcode, ISNULL(TB_CA609.pname,'') as pname, ISNULL(TB_CA609.psize,'') as psize,
         ISNULL(TB_CA609.punit,'') as punit, ISNULL(TB_CA608.qcflag, '') as qcflag, ISNULL(TB_CA608.ibgflag, '') as ibgflag,
-        ISNULL((TB_CA609.qty - TB_CA609.qcqty),0) as wmqty, ISNULL(TB_CA608.baldate,'') as baldate, ISNULL(TB_CA608.balnum,'') as balnum, ISNULL(TB_CA609.balseq,'') as balseq, ISNULL(TB_CA608.store,'') as store, ISNULL(TB_CA608.comcd,'') as comcd,
+        ISNULL((TB_CA609.qty - TB_CA609.qcqty),0) as wmqty, ISNULL(TB_CA608.baldate,'') as baldate, ISNULL(TB_CA608.balnum,'') as balnum, ISNULL(TB_CA609.balseq,'') as balseq, ISNULL(TB_CA609.store,'') as store, ISNULL(TB_CA608.comcd,'') as comcd,
         ISNULL(TB_CA608.divicd, '') as divicd, ISNULL(TB_CA609.qty, 0) as qty, ISNULL(TB_CA609.qcdv, '') as qcdv
         FROM TB_CA608 WITH(NOLOCK), TB_CA609 WITH(NOLOCK), TB_XCLIENT WITH(NOLOCK), TB_CA501 WITH(NOLOCK)
         WHERE (TB_CA608.custcd = TB_CA609.custcd) AND (TB_CA608.spjangcd = TB_CA609.spjangcd) AND (TB_CA608.baldate = TB_CA609.baldate) AND (TB_CA608.balnum = TB_CA609.balnum)
@@ -168,12 +168,12 @@
 
     <insert id="Insert_TB_CA624" parameterType="com.actas.cmob.DTO.Themoon.CA609PopDto">
         INSERT INTO TB_CA624 (custcd, spjangcd, qcdate, qcnum, qcseq, pcode, pname, psize, punit, qty, uamt, samt, tamt, mamt, qcdv, badqty, okqty, remarks, ibgflag, ibgqty, conck,
-        baldate, balnum, balseq, ischdate, indate, inperid)
+        baldate, balnum, balseq, ischdate, indate, inperid, store)
         values
         (
         'THEMOON', 'ZZ', #{gs_today}, #{as_qcnum}, #{as_qcseq}, #{as_pcode}, #{as_pname}, #{as_psize}, #{as_punit}, #{ae_qty}, #{ae_uamt}, ROUND(CONVERT(FLOAT, #{ae_qty}) * CONVERT(FLOAT, #{ae_uamt}), 0), ROUND(CONVERT(FLOAT, #{ae_qty}) * CONVERT(FLOAT, #{ae_uamt}) * 0.1, 0),
         ROUND(CONVERT(FLOAT, #{ae_qty}) * CONVERT(FLOAT, #{ae_uamt}), 0) + ROUND(CONVERT(FLOAT, #{ae_qty}) * CONVERT(FLOAT, #{ae_uamt}) * 0.1, 0),
-        #{as_qcdv}, 0, #{ae_qty}, '', '0', 0, '1', #{as_baldate}, #{as_balnum}, #{as_balseq}, #{as_ischdate}, #{gs_today}, #{gs_perid}
+        #{as_qcdv}, 0, #{ae_qty}, '', '0', 0, '1', #{as_baldate}, #{as_balnum}, #{as_balseq}, #{as_ischdate}, #{gs_today}, #{gs_perid}, #{as_store}
         )
     </insert>
 

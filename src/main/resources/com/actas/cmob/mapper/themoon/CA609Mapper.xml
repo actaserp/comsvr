@@ -188,9 +188,9 @@
     </update>
 
     <select id="select_tb_ca608_head" parameterType="com.actas.cmob.DTO.Themoon.CA609PopDto" resultType="com.actas.cmob.DTO.Themoon.CA609Dto">
-        SELECT COUNT(*) as ll_cnt, SUM(CASE qcflag WHEN '1' THEN 1 WHEN '0' THEN 1 ELSE 0 END) as ll_cnt1,
+        SELECT COUNT(*) as ll_cnt, SUM(CASE qcflag WHEN '1' THEN 1 ELSE 0 END) as ll_cnt1,
         SUM(CASE qcflag WHEN '2' THEN 1 ELSE 0 END) as ll_cnt2,
-        SUM(CASE ibgflag WHEN '1' THEN 1 WHEN '0' THEN 1 ELSE 0 END) as ll_cnt3,
+        SUM(CASE ibgflag WHEN '1' THEN 1 ELSE 0 END) as ll_cnt3,
         SUM(CASE ibgflag WHEN '2' THEN 1 WHEN '9' THEN 1 ELSE 0 END) as ll_cnt4
         FROM TB_CA609 WITH(NOLOCK) WHERE custcd = 'THEMOON' AND spjangcd = 'ZZ' AND baldate = #{as_baldate} AND balnum = #{as_balnum}
     </select>

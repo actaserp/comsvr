@@ -893,7 +893,8 @@ public class Appthemoon01Controller {
             popDto.setPS_SPCD(extranctedValue);
             popDto.setPS_AREA(extranctedValue2);
             popDto.setPS_CLTCD(popDto.getCltcd());
-            popDto.setPS_COMCD(extranctedValue3);
+            //24.06.18 COM은 두문기준으로 "zz"를 고정함.
+            popDto.setPS_COMCD("ZZ");
 
             if (popDto.getPS_AREA() == null || popDto.getPS_AREA() == "")
             {
@@ -935,14 +936,20 @@ public class Appthemoon01Controller {
 
             for(int i=0; i < da036DtoList.size(); i++)
             {
-                double doubleValue = Double.parseDouble(da036DtoList.get(i).getOUAMT());
-                longvalue += (long) doubleValue;
+                String ls_tax  = da036DtoList.get(i).getTAX();
+                if(ls_tax == null){
+                    ls_tax = "";
+                }
+                if(ls_tax.equals('0')){
+                    double doubleValue = Double.parseDouble(da036DtoList.get(i).getOUAMT());
+                    longvalue += (long) doubleValue;
 
-                double doublevalue2 = Double.parseDouble(da036DtoList.get(i).getINAMT());
-                longvalue2 += (long) doublevalue2;
+                    double doublevalue2 = Double.parseDouble(da036DtoList.get(i).getINAMT());
+                    longvalue2 += (long) doublevalue2;
 
-                double doublevalue3 = Double.parseDouble(da036DtoList.get(i).getHJAMT());
-                longvalue3 += (long) doublevalue3;
+                    double doublevalue3 = Double.parseDouble(da036DtoList.get(i).getHJAMT());
+                    longvalue3 += (long) doublevalue3;
+                }
 
             }
 

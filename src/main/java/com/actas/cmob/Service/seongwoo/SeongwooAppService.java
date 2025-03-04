@@ -252,13 +252,24 @@ public class SeongwooAppService {
         return (queryResult > 0);
     }
 
+    public String select_lotno(PopDto parm){
+        String dbnm = parm.getDbnm();
+
+        switch (dbnm){
+            case "ERP_SWSPANEL":
+                return SeongWooDBMapper.select_lotno(parm);
+            default:
+                return null;
+        }
+
+    }
 
     public List<ThemoonListDto2>  select_tb_ca630(PopDto parm){
 
         String dbnm = parm.getDbnm();
 
         switch (dbnm){
-            case "ERP_THEMOON":
+            case "ERP_SWSPANEL":
                 return SeongWooDBMapper.select_tb_ca630(parm);
             default:
                 return null;

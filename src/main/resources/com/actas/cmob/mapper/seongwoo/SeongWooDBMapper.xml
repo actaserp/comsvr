@@ -406,7 +406,7 @@
             custcd, spjangcd, plan_no, wseq, wflag, seq, pcode, lotno, store, wotdt, wqty, bqty, qty, styn, indate, inperid
         ) VALUES
         (
-               'SWSPANEL', 'ZZ', #{plan_no}, '03', '00030', '01', #{pcode}, #{lotno}, 'P01', #{gs_today}, #{wotqt}, 0, #{wotqt}, '1', #{gs_today}, #{close_perid}
+               'SWSPANEL', 'ZZ', #{plan_no}, '03', '00030', '01', #{pcode}, #{lotno}, 'M01', #{gs_today}, #{wotqt}, 0, #{wotqt}, '1', #{gs_today}, #{close_perid}
         )
     </insert>
 
@@ -489,29 +489,32 @@
     </delete>
 
 
-
+    <!-- 품목 코드 조회 -->
+    <select id="select_lotno" parameterType="com.actas.cmob.DTO.Themoon.PopDto" resultType="String">
+        select pcode from tb_ca613 where lotno = #{lotno};
+    </select>
     <!--재고실사-->
     <select id="select_tb_ca630" parameterType="com.actas.cmob.DTO.Themoon.PopDto" resultType="com.actas.cmob.DTO.Themoon.ThemoonListDto2">
-        select ISNULL(phm_pcod,'') as pcode, ISNULL(phm_pnam,'') as pname, ISNULL(phm_size,'') as psize, ISNULL(phm_unit,'') as punit, ISNULL(code88,'') as lotno,
-        ISNULL(dbo.DF_TB_CA601_ENDDATE('SWSPANEL', 'ZZ', #{gs_today}, 'P01', phm_pcod),'') as stdate,
-        ISNULL(CONVERT(VARCHAR(10) ,dbo.DF_TB_CA602_PCODE_LOTNO_JQTY('SWSPANEL', 'ZZ', 'P01', phm_pcod, code88, dbo.DF_TB_CA601_ENDDATE('SWSPANEL', 'ZZ', #{gs_today}, 'P01', phm_pcod), #{gs_today})), '')
+        select ISNULL(phm_pcod,'') as pcode, ISNULL(phm_pnam,'') as pname, ISNULL(phm_size,'') as psize, ISNULL(phm_unit,'') as punit,
+        ISNULL(dbo.DF_TB_CA601_ENDDATE('SWSPANEL', 'ZZ', #{gs_today}, 'M01', phm_pcod),'') as stdate,
+        ISNULL(CONVERT(VARCHAR(10) ,dbo.DF_TB_CA602_PCODE_LOTNO_JQTY('SWSPANEL', 'ZZ', 'M01', phm_pcod, #{lotno}, dbo.DF_TB_CA601_ENDDATE('SWSPANEL', 'ZZ', #{gs_today}, 'M01', phm_pcod), #{gs_today})), '')
         as jaeqty
-        from tb_ca501 with(nolock) where phm_cust = 'SWSPANEL' and code88 = #{code88}
+        from tb_ca501 with(nolock) where phm_cust = 'SWSPANEL' and phm_pcod = #{phm_pcod}
     </select>
 
     <!--8804712022341-->
 
     <!--재고량 계산-->
     <select id="select_jaeqty" parameterType="com.actas.cmob.DTO.Themoon.PopDto" resultType="com.actas.cmob.DTO.Themoon.ThemoonListDto2">
-        select ISNULL(dbo.df_tb_ca602_pcode_jqty('SWSPANEL', 'ZZ', 'P01', #{phm_pcode}, #{stdate}, #{gs_today}),'') as jaeqty from dual
+        select ISNULL(dbo.df_tb_ca602_pcode_jqty('SWSPANEL', 'ZZ', 'M01', #{phm_pcode}, #{stdate}, #{gs_today}),'') as jaeqty from dual
     </select>
 
 
     <insert id="insert_tb_ca630" parameterType="com.actas.cmob.DTO.Themoon.PopDto">
         insert into tb_ca630 (custcd, spjangcd, store, sildate, pcode, lotno, jaeqty, jaeuamt, jaeamt, silqty, siluamt, silamt, banflag, banyn, acc_flag, acc_spdate,
-                              acc_spnum, sildv, remarks, indate, inperid) values
+                              acc_spnum, indate, inperid) values
                               (
-                               'SWSPANEL', 'ZZ', 'P01', #{gs_today}, #{pcode}, #{lotno}, #{jaeqty}, 0, 0, #{silqty}, 0, 0, '0', '0', '0', '', '', '', '',
+                               'SWSPANEL', 'ZZ', 'M01', #{gs_today}, #{pcode}, #{lotno}, #{jaeqty}, 0, 0, #{silqty}, 0, 0, '0', '0', '0', '', '',
                                #{gs_today}, #{gs_perid}
                               )
 
@@ -524,9 +527,9 @@
     </select>
 
     <update id="Update_tb_ca630Int" parameterType="com.actas.cmob.DTO.Themoon.PopDto">
-        UPDATE tb_ca630 SET custcd = 'SWSPANEL', spjangcd = 'ZZ', store = 'P01',sildate = #{gs_today}, pcode = #{pcode}, lotno = #{lotno}, jaeqty = #{jaeqty},
+        UPDATE tb_ca630 SET custcd = 'SWSPANEL', spjangcd = 'ZZ', store = 'M01',sildate = #{gs_today}, pcode = #{pcode}, lotno = #{lotno}, jaeqty = #{jaeqty},
                             jaeuamt = '0', jaeamt = '0', silqty = #{silqty}, siluamt = 0, silamt = 0, banflag = '0', banyn = '0', acc_flag = '0', acc_spdate = '',
-                            acc_spnum = '', sildv = '', remarks = '', indate = #{gs_today}, inperid = #{gs_perid}  where sildate = #{gs_today} and pcode = #{pcode} and
+                            acc_spnum = '',  indate = #{gs_today}, inperid = #{gs_perid}  where sildate = #{gs_today} and pcode = #{pcode} and
             lotno = #{lotno}
     </update>
 
@@ -661,7 +664,7 @@
 
     <select id="SP_PLAN_WORK_DIVI" parameterType="com.actas.cmob.DTO.Themoon.PopDto" resultType="com.actas.cmob.DTO.Themoon.DIVICDDto">
             {
-            call SP_PLAN_WORK_DIVI('SWSPANEL', 'ZZ', #{PS_FDATE}, #{PS_TDATE},#{PS_DIVICD}, 'P01', #{PS_SDATE})
+            call SP_PLAN_WORK_DIVI('SWSPANEL', 'ZZ', #{PS_FDATE}, #{PS_TDATE},#{PS_DIVICD}, 'M01', #{PS_SDATE})
             }
     </select>
 

@@ -4,6 +4,7 @@ package com.actas.cmob.controller.seongwoo;
 import com.actas.cmob.DTO.Themoon.*;
 import com.actas.cmob.DTO.UserFormDto;
 import com.actas.cmob.Service.kosep.KosepAppService;
+import com.actas.cmob.Service.seongwoo.SeongwooAppService;
 import com.actas.cmob.Service.themoon.ThemoonAppService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.logging.Log;
@@ -84,7 +85,7 @@ public class Appseongwoo01Controller {
 
 
 
-    private final ThemoonAppService themoonAppService;
+    private final SeongwooAppService themoonAppService;
 
 
 
@@ -529,6 +530,7 @@ public class Appseongwoo01Controller {
     public Object Appcom03_index(@RequestParam Map<String, String> param
             , Model model
             , HttpServletRequest request) throws Exception{
+
         param.forEach((key, values) -> {
             switch (key){
                 case "dbnm":
@@ -538,7 +540,10 @@ public class Appseongwoo01Controller {
                     popDto.setGs_today(values.toString());
                     break;
                 case "code88":
-                    popDto.setCode88(values.toString().replace("\n", ""));
+                    String[] value = values.toString().replace("\n", "").split("]");
+
+                    //popDto.setLotno("24110500101912151515");
+                    popDto.setLotno(value[1].trim());
                     break;
                 default:
                     break;
@@ -547,10 +552,18 @@ public class Appseongwoo01Controller {
 
         log.info(popDto.getGs_today()  + " : Gs_today");
         log.info(popDto.getCode88()    + " : Code88");
+        log.info(popDto.getCode88());
 
+        String lotno = themoonAppService.select_lotno(popDto);
+        popDto.setPhm_pcod(lotno);
+
+        List<ThemoonListDto2> lists = new ArrayList<>();
 
         lists = themoonAppService.select_tb_ca630(popDto);
 
+        for(ThemoonListDto2 dt: lists){
+            dt.setLotno(popDto.getLotno());
+        }
 
         return lists;
     }
@@ -567,74 +580,50 @@ public class Appseongwoo01Controller {
                                     Model model, HttpServletRequest request) throws Exception {
 
 
-        String closePerid = data.get("close_perid").toString();
-        String close_date = data.get("gs_today").toString();
+        String closePerid = (String) data.get("close_perid");
+        String closeDate = (String) data.get("gs_today");
 
         List<String> pcodeList = (List<String>) data.get("pcodeList");
         List<String> jaeqtyList = (List<String>) data.get("jaeqtyList");
-        List<String> silqty = (List<String>) data.get("silqty");
-        List<String> lotno = (List<String>) data.get("lotnoList");
+        List<String> silqtyList = (List<String>) data.get("silqty");
+        List<String> lotnoList = (List<String>) data.get("lotnoList");
 
-
-        for(int i=0; i < pcodeList.size(); i++){
-
-            popDto.setGs_today(close_date);
+        // popDto를 반복문 내에서 새롭게 생성
+        for (int i = 0; i < pcodeList.size(); i++) {
+            PopDto popDto = new PopDto();
+            popDto.setGs_today(closeDate);
             popDto.setGs_perid(closePerid);
             popDto.setPcode(pcodeList.get(i));
             popDto.setJaeqty(jaeqtyList.get(i));
-            popDto.setSilqty(silqty.get(i));
-            popDto.setLotno(lotno.get(i));
+            popDto.setSilqty(silqtyList.get(i));
+            popDto.setLotno(lotnoList.get(i));
 
+            List<ThemoonListDto2> checkList = themoonAppService.insert_check(popDto);
 
-            List<ThemoonListDto2> list011Dto = new ArrayList<>();
-            list011Dto = themoonAppService.insert_check(popDto);
-
-
-            if(!list011Dto.isEmpty()){
-                if(list011Dto.get(0).getBanflag().contains("1")){
-                    return "exist";
-                }
+            if (!checkList.isEmpty() && checkList.get(0).getBanflag().contains("1")) {
+                return "exist";
             }
-
-
         }
 
-        for(int i=0; i < pcodeList.size(); i++){
-
-            popDto.setGs_today(close_date);
+        // insert 또는 update 로직 통합
+        for (int i = 0; i < pcodeList.size(); i++) {
+            PopDto popDto = new PopDto();
+            popDto.setGs_today(closeDate);
             popDto.setGs_perid(closePerid);
             popDto.setPcode(pcodeList.get(i));
             popDto.setJaeqty(jaeqtyList.get(i));
-            popDto.setSilqty(silqty.get(i));
-            popDto.setLotno(lotno.get(i));
+            popDto.setSilqty(silqtyList.get(i));
+            popDto.setLotno(lotnoList.get(i));
 
-            log.info(pcodeList.size() + " 사이즈");
+            List<ThemoonListDto2> checkList = themoonAppService.insert_check(popDto);
 
-            log.info(popDto.getGs_today() + " " +  i +"번쨰");
-            log.info(popDto.getPcode() + " " + i + "번째");
-            log.info(popDto.getJaeqty() + " " + i + "번째");
-            log.info(popDto.getSilqty() + " " + i + "번째");
-
-
-            List<ThemoonListDto2> list01Dto = new ArrayList<>();
-
-            list01Dto = themoonAppService.insert_check(popDto);
-
-
-
-            if(list01Dto.isEmpty()){
+            if (checkList.isEmpty()) {
                 themoonAppService.insert_tb_ca630(popDto);
-                log.info("1");
-
-
-            }else{
+            } else {
                 themoonAppService.Update_tb_ca630Int(popDto);
-                log.info("2");
-
             }
-
-
         }
+
 
         return "success";
     }

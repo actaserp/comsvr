@@ -86,6 +86,8 @@ public interface SeongWooDBMapper {
 
     public int delete_tb_fplan_wtime(PopDto parm);
 
+    public String select_lotno(PopDto parm);
+
     public List<ThemoonListDto2> select_tb_ca630(PopDto parm);
 
 
